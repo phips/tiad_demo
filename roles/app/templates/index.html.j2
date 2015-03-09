@@ -11,10 +11,12 @@ body {
 </head>
 <body>
     <img src="https://s3-eu-west-1.amazonaws.com/cmc-images/{{ app_cow | default('hello') }}cow.png"/>
+    {% if ansible_distribution == 'Amazon' %}
     <br>
     hostname: {{ ansible_ec2_public_hostname }}
     <br>
     instance_id: {{ ansible_ec2_instance_id }}
+    {% endif %}
 </body>
 </html>
 

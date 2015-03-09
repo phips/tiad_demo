@@ -1,4 +1,4 @@
-.PHONY: run test
+.PHONY: run test plays
 
 # default inventory file
 INV ?= tiad

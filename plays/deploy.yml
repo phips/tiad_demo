@@ -1,0 +1,8 @@
+---
+# vim: set ft=ansible:
+
+- hosts: web
+  sudo: true
+  roles:
+    - { role: app,   tags: app }
+    - { role: nginx, tags: www }

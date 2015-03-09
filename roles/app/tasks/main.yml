@@ -5,26 +5,47 @@
 - name: Check for OS support
   fail: msg="OS is not supported"
   when: ansible_os_family != 'RedHat'
+  changed_when: false
+
+- name: Include OS specific settings
+  include_vars: "{{ ansible_distribution }}.yml"
 
 - name: Ensure packages are installed
   yum: name={{ item }} state=present
-  with_items:
-    - python26-pip
-  when: app_clone is defined
+  with_items: app_packages
 
 - name: Ensure pip packages are installed
   pip: name={{ item }} state=present
   with_items:
     - Flask
     - Flask-Bootstrap
-  when: app_clone is defined
+  when: app_pips is defined
 
-- name: Ensure our code is installed
+- name: Grant git access (not Amazon)
+  copy: src=vagrant.key
+        dest=.ssh/vagrant
+        mode=0600
+  sudo_user: vagrant
+  sudo: true
+  when: ansible_distribution != 'Amazon'
+  no_log: true
+
+- name: Ensure our code is installed (Amazon)
   git:
     repo={{ app_repo }}
     dest={{ app_path }}
     version={{ app_branch | default('master') }}
-  when: app_clone is defined
+    accept_hostkey=True
+  when: (app_clone is defined) and (ansible_distribution == 'Amazon')
+
+- name: Ensure our code is installed (CentOS)
+  git:
+    repo={{ app_repo }}
+    dest={{ app_path }}
+    version={{ app_branch | default('master') }}
+    accept_hostkey=True
+    key_file=/home/vagrant/.ssh/vagrant
+  when: (app_clone is defined) and (ansible_distribution == 'CentOS')
 
 - name: Static root
   file: path=/srv/www/html
