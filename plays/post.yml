@@ -1,0 +1,15 @@
+---
+# vim: set syn=ansible ts=2 sw=2 et:
+#
+- hosts: all
+  sudo: true
+
+  roles:
+    - { role: hosts,    tags: hosts }
+    - { role: issue,    tags: issue }
+    - { role: sshd,     tags: ssh }
+    - { role: shell,    tags: shell }
+    - { role: yum,      tags: yum }
+    - { role: epel,     tags: epel }
+    - { role: packages, tags: pkgs }
+    - { role: discover, tags: disco }

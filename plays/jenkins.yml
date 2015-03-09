@@ -1,0 +1,9 @@
+---
+# install jenkins
+
+- hosts: prod_jenkins
+  sudo: yes
+  roles:
+    - { role: geerlingguy.java }
+    - { role: geerlingguy.jenkins }
+

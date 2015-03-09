@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+[uwsgi]
+# base         = {{ app_path }}/app
+# virtualenv   = ~/pylib
+app          = app
+module       = %(app)
+callable     = app
+socket       = /var/tmp/%n.sock
+chmod-socket = 666
+logto        = /var/log/uwsgi/%n.log

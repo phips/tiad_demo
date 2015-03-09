@@ -1,0 +1,4 @@
+---
+# defaults file for app
+
+app_path: /srv/web_app

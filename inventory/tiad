@@ -1,0 +1,14 @@
+[tower]
+tower.tiad ansible_ssh_host=192.168.119.172
+
+[jenkins]
+jenkins.tiad ansible_ssh_host=192.168.119.173
+
+[web]
+web.tiad ansible_ssh_host=192.168.119.174
+
+[prod_jenkins:children]
+jenkins
+
+[prod_web:children]
+web

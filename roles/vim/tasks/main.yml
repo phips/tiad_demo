@@ -1,0 +1,21 @@
+---
+# tasks file for vim
+# vim: set ft=ansible:
+
+- name: Ensure vimrc present for specified user
+  copy: src=vimrc dest=/home/{{ vim_user }}/.vimrc
+        owner={{ vim_user }} group={{ vim_user }} mode=0644
+
+- name: Ensure Bundle path exists
+  file: path=/home/{{ vim_user }}/.vim/bundle state=directory
+        owner={{ vim_user }} group={{ vim_user }} mode=0755
+  
+- name: Ensure vundle is installed
+  git:  repo=https://github.com/gmarik/vundle.git
+        dest=/home/{{ vim_user }}/.vim/bundle/vundle
+        depth=1
+
+- name: Ensure correct ownership of vundle directory
+  file: path=/home/{{ vim_user }}/.vim/bundle/vundle
+        state=directory recurse=true
+        owner={{ vim_user }} group={{ vim_user }}

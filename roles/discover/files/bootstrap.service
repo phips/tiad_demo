@@ -1,0 +1,10 @@
+[Unit]
+Description=Find Ansible Tower and bootstrap
+After=NetworkManager.service sshd.service
+
+[Service]
+ExecStart=/opt/dvo/bin/get_config.sh
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,40 @@
+---
+# tasks file for app
+# vim: set ft=ansible:
+
+- name: Check for OS support
+  fail: msg="OS is not supported"
+  when: ansible_os_family != 'RedHat'
+
+- name: Ensure packages are installed
+  yum: name={{ item }} state=present
+  with_items:
+    - python26-pip
+  when: app_clone is defined
+
+- name: Ensure pip packages are installed
+  pip: name={{ item }} state=present
+  with_items:
+    - Flask
+    - Flask-Bootstrap
+  when: app_clone is defined
+
+- name: Ensure our code is installed
+  git:
+    repo={{ app_repo }}
+    dest={{ app_path }}
+    version={{ app_branch | default('master') }}
+  when: app_clone is defined
+
+- name: Static root
+  file: path=/srv/www/html
+        state=directory
+
+- name: Gather EC2 facts
+  ec2_facts:
+  when: ansible_distribution == 'Amazon'
+
+- name: index.html
+  template: src=index.html.j2
+            dest=/srv/www/html/index.html
+

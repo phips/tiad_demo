@@ -1,0 +1,16 @@
+---
+# tasks for discover role
+
+- name: Check for supported OS
+  fail: msg="{{ ansible_os_family }} version {{ ansible_distribution_major_version }} is not supported by this role"
+  when: ( ansible_os_family != 'RedHat' ) and ( ansible_distribution_major_version != 7 )
+
+- name: Ensure directory exists
+  file: path=/opt/dvo/bin
+        state=directory
+        owner=root group=root mode=0755
+
+- name: Ensure service script is in place
+  copy: src=get_config.sh
+        dest=/opt/dvo/bin/get_config.sh
+        owner=root group=root mode=0755
