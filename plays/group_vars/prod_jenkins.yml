@@ -5,6 +5,7 @@ java_packages:
 jenkins_plugins:
   - git
   - github
+  - git-parameter
   - ssh
   - google-login
   - shiningpanda
