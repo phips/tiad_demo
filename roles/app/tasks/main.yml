@@ -53,7 +53,8 @@
   when: app_clone is defined
 
 - name: Ensure our app service is running
-  service: name=flask_app state=running enabled=true
+  service: name=flask_app state=started enabled=true
+           pattern=run_prod.py
   when: app_clone is defined
 
 - name: Static root
