@@ -1,0 +1,6 @@
+---
+# handlers file for postgres
+
+- name: restart pgsql
+  service: name={{ postgres_service_name }}
+           state=restarted

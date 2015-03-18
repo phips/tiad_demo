@@ -1,0 +1,5 @@
+---
+# postgres vars file for CentOS-6
+
+postgres_initdb_cmd: /sbin/service postgresql-9.3 initdb
+postgres_service_name: postgresql-9.3

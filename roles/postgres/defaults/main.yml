@@ -1,0 +1,14 @@
+---
+# defaults file for postgres
+
+# psycopg2 needed to check superuser has password
+postgres_packages:
+  - postgresql93-libs-9.3.5
+  - postgresql93-9.3.5
+  - postgresql93-server-9.3.5
+  - python-psycopg2
+postgres_access_from: 10.0.0.1/8
+postgres_listenon: "'{{ ansible_default_ipv4.address }}'"
+# password123
+postgres_pgpass: md5891d7d5079424b1cb973187d354d78de
+postgres_datadir: /var/lib/pgsql/9.3/data

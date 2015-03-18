@@ -1,0 +1,12 @@
+# {{ ansible_managed }}
+
+# Add pgsql-9.3/bin onto PATH
+
+PGPATH=/usr/pgsql-9.3/bin
+
+if [ -d $PGPATH ]; then
+    if [ $(echo $PATH | grep -c $PGPATH) -eq 0 ]; then
+        PATH=$PATH:$PGPATH
+    fi
+fi
+

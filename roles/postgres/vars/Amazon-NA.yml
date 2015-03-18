@@ -1,0 +1,5 @@
+---
+# vars file for Amazon
+
+postgres_initdb_cmd: service postgresql93 initdb
+postgres_service_name: postgresql93

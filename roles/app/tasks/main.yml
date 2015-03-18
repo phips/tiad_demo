@@ -16,9 +16,7 @@
 
 - name: Ensure pip packages are installed
   pip: name={{ item }} state=present
-  with_items:
-    - Flask
-    - Flask-Bootstrap
+  with_items: app_pips
   when: app_pips is defined
 
 - name: Grant git access (not Amazon)

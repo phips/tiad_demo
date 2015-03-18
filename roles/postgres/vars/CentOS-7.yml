@@ -1,0 +1,4 @@
+---
+# postgres vars file for CentOS-7
+
+postgres_initdb_cmd: /usr/pgsql-9.3/bin/postgresql93-setup initdb

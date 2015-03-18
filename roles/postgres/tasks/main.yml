@@ -1,0 +1,64 @@
+---
+# tasks file for postgres
+# vim: set syn=ansible ts=2 sw=2:
+
+- name: Include OS version specific differences
+  include_vars: "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+
+- name: Ensure postgres yum repo is set up
+  copy: src=pgdb93.repo dest=/etc/yum.repos.d/pgdb93.repo
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure RPM GPG keyfile is present
+  copy: src=RPM-GPG-KEY-PGDG-93 dest=/etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-93
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure prerequisite packages are installed
+  yum: name={{ item }} state=present
+  with_items: postgres_packages
+
+- name: Ensure pgsql data dir exists
+  file: path={{ postgres_datadir }}
+        state=directory owner=postgres
+
+- name: Set PGDATA so service picks it up
+  template: dest=/etc/sysconfig/pgsql/postgresql-9.3
+            src=sysconfig.j2
+            owner=root group=root mode=0644
+  when: postgres_datadir is defined
+
+- name: Initialise database
+  command: "{{ postgres_initdb_cmd }}"
+  args:
+    creates: "{{ postgres_datadir }}/PG_VERSION"
+  register: initdb
+
+- name: Ensure postgresql.conf is in place
+  template: dest="{{ postgres_datadir }}/postgresql.conf"
+            src=postgresql.conf.j2
+            owner=postgres group=postgres mode=0640
+  notify:
+    - restart pgsql
+  when: initdb|skipped or initdb|success
+
+# access permissions in here - this could be done better
+- name: Ensure pg_hba.conf is in place
+  template: dest="{{ postgres_datadir }}/pg_hba.conf"
+            src=pg_hba.conf.j2
+            owner=postgres group=postgres mode=0600
+  notify:
+    - restart pgsql
+
+- name: Ensure service is set to start on boot
+  service: name={{ postgres_service_name }}
+           state=started
+           enabled=yes
+
+- name: Ensure pgsql is on PATH
+  template: src=pgsql.profile.d.j2 dest=/etc/profile.d/pgsql.sh
+            owner=root group=root mode=0644
+
+# - name: Ensure superuser has a password on it
+#   postgresql_user: name=postgres password={{ postgres_pgpass }}
+#   sudo: yes
+#   sudo_user: postgres

@@ -1,6 +1,9 @@
 ---
 # vim: set ft=ansible ts=2 sw=2 et:
 #
+
+# First play - dynamic grouping, some common roles
+#
 - hosts: all:!tag_type_tower
   gather_facts: true
   user: ec2-user
@@ -9,17 +12,19 @@
   tasks:
     - name: Dynamic grouping
       group_by: key={{ ec2_tag_env }}_{{ ec2_tag_type }}
-      tags: [ prod_web, prod_db, prod_jenkins ]
+      tags: [ prod_web, prod_db, prod_jenkins, dev_web, dev_db ]
 
   roles:
     - { role: issue,    tags: issue }
     - { role: sshd,     tags: ssh }
     - { role: shell,    tags: shell }
 
-- hosts: prod_web
+# Second play - web servers
+#
+- hosts: prod_web:dev_web
   user: ec2-user
   sudo: true
-  tags: prod_web
+  tags: [ prod_web, dev_web ]
   roles:
     - { role: packages, tags: yum }
     - { role: app, tags: app }
@@ -28,37 +33,23 @@
     - name: Gather ec2 facts
       ec2_facts:
 
-    - name: Wait for port 80
-      wait_for: >
-        host={{ ansible_ec2_public_ipv4 }}
-        timeout=60
-        port=80
-        state=started
-
     - name: Ensure instance is registered with ELB
       local_action:
         module: ec2_elb
         region: eu-west-1
         instance_id: "{{ ansible_ec2_instance_id }}"
         ec2_elbs:
-          - 'MainLB'
+          - "{{ lbname | default('VPClb') }}"
         state: present
       sudo: false
 
-- hosts: prod_db
+# Third play - DB servers
+#
+- hosts: prod_db:dev_db
   user: ec2-user
   sudo: true
-  tags: prod_db
+  tags: [ prod_db, dev_db ]
   roles:
     - { role: packages, tags: yum }
     - { role: postgres, tags: db }
-
-- hosts: prod_jenkins
-  user: ec2-user
-  sudo: true
-  tags: prod_jenkins
-  roles:
-    - { role: packages, tags: yum }
-    - { role: geerlingguy.java }
-    - { role: geerlingguy.jenkins }
 
