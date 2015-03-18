@@ -45,6 +45,17 @@
     key_file=/home/vagrant/.ssh/vagrant
   when: (app_clone is defined) and (ansible_distribution == 'CentOS')
 
+- name: Ensure our app service definition is in place
+  template: src=app.service.j2
+            dest=/etc/init.d/flask_app
+            mode=0755
+            owner=root group=root
+  when: app_clone is defined
+
+- name: Ensure our app service is running
+  service: name=flask_app state=running enabled=true
+  when: app_clone is defined
+
 - name: Static root
   file: path=/srv/www/html
         state=directory

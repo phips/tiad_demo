@@ -17,3 +17,5 @@ packages:
   - libxslt-devel
   - gcc
 
+packages_pip:
+  - ansible-tower-cli
