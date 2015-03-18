@@ -4,12 +4,12 @@
 - hosts: all:!tag_type_tower
   gather_facts: true
   user: ec2-user
+  tags: [ app, dev_web ]
   sudo: true
 
   tasks:
     - name: Dynamic grouping
       group_by: key={{ ec2_tag_env }}_{{ ec2_tag_type }}
-      tags: dev_web
 
 - hosts: dev_web
   sudo: true
