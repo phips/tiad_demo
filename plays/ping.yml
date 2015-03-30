@@ -4,9 +4,3 @@
   tasks:
     - name: Ping host
       ping:
-
-- hosts: tag_type_win
-  tasks:
-    - name: Ping host
-      win_ping:
-
