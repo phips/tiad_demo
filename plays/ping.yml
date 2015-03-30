@@ -1,7 +1,12 @@
 ---
-- hosts: all
+- hosts: all:!tag_type_win
   gather_facts: no
   tasks:
     - name: Ping host
-      ping: 
+      ping:
+
+- hosts: tag_type_win
+  tasks:
+    - name: Ping host
+      win_ping:
 
