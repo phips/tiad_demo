@@ -42,6 +42,7 @@
           - "{{ lbname | default('VPClb') }}"
         state: present
       sudo: false
+      when: elb_reg
 
 # Third play - DB servers
 #

@@ -1,7 +1,7 @@
 .PHONY: run test plays
 
 # default inventory file
-INV ?= tiad
+INV ?= ec2.py
 # default play
 PLAY ?= site
 # default opts

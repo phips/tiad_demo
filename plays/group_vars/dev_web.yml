@@ -21,3 +21,4 @@ nginx_sites:
       root: "/srv/www/html"
       location1: { name: /, try_files: "$uri $uri/ /index.html" }
 
+elb_reg: False
