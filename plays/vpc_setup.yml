@@ -42,16 +42,6 @@
         vpc_id: "{{ vpc.vpc_id }}"
         purge_rules: false
         rules:
-          # HOME
-          - proto: all
-            from_port: 0
-            to_port: 65535
-            cidr_ip: 86.148.113.65/32
-          # US OFFICE
-          - proto: all
-            from_port: 0
-            to_port: 65535
-            cidr_ip: 45.37.66.90/32
           # TOWER
           - proto: tcp
             from_port: 22
