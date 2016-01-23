@@ -10,7 +10,8 @@
 
   tasks:
     - name: Check for variables
-      fail: msg="Must supply tags_env to -e"
+      fail:
+        msg: "Must supply tags_env to -e"
       when: tags_env is not defined
 
     - name: Create VPC
@@ -49,7 +50,8 @@
             cidr_ip: 52.16.66.2/32
 
     - name: VPC subnet id is
-      debug: msg="{{ vpc.subnets[0].id }}"
+      debug:
+        msg: "{{ vpc.subnets[0].id }}"
 
     - name: Ensure load balancer launched
       local_action:
@@ -77,10 +79,11 @@
 
     - name: Ensure LB is registered in DNS
       route53:
-        command=create overwrite=yes
-        record=www.bovine.cow
-        zone=bovine.cow
-        type=CNAME
-        ttl=180
-        value={{ elb.elb.dns_name }}
+        command: create
+        overwrite: yes
+        record: www.bovine.cow
+        zone: bovine.cow
+        type: CNAME
+        ttl: 180
+        value: "{{ elb.elb.dns_name }}"
 
